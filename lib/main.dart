@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 void main() {
   runApp(const CryptoCurrencyApp());
@@ -13,11 +14,32 @@ class CryptoCurrencyApp extends StatelessWidget {
       title: 'Crypto Currency',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primarySwatch: Colors.red,
-        // primaryColor: Colors.green,
-scaffoldBackgroundColor: Colors.black,
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.red),
-        useMaterial3: true,
+        primarySwatch: Colors.yellow,
+        scaffoldBackgroundColor: const Color.fromARGB(248, 48, 48, 48),
+        // colorScheme: ColorScheme.fromSeed(seedColor: Colors.red),
+        // useMaterial3: true,
+        appBarTheme: const AppBarTheme(
+          backgroundColor: Color.fromARGB(48, 48, 48, 48),
+          titleTextStyle: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.w700,
+            fontSize: 20,
+          ),
+        ),
+        textTheme: TextTheme(
+          bodyMedium: const TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.w500,
+            fontSize: 20,
+          ),
+          labelSmall: TextStyle(
+            color: Colors.white.withOpacity(0.4),
+            fontWeight: FontWeight.w700,
+            fontSize: 14,
+          ),
+        ),
+        dividerColor: Colors.white24,
+        listTileTheme: const ListTileThemeData(iconColor: Colors.white),
       ),
       home: const MyHomePage(),
     );
@@ -25,51 +47,45 @@ scaffoldBackgroundColor: Colors.black,
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, });
-
-
+  const MyHomePage({
+    super.key,
+  });
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Scaffold(
-backgroundColor: Colors.amber,
+      // backgroundColor: Colors.white,
       appBar: AppBar(
         centerTitle: true,
-        backgroundColor: Colors.pink,
         title: const Text('Crypto Currency App'),
-
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text(
-              'You have pushed the button this many times:',
+      body: ListView.separated(
+        itemCount: 10,
+        separatorBuilder: (context, index) => const Divider(),
+        itemBuilder: (context, i) {
+          return ListTile(
+            leading: SvgPicture.asset(
+              'assets/svg/bitcoin_logo.svg',
+              height: 32,
+              width: 32,
             ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
+            trailing: const Icon(Icons.arrow_forward_ios),
+            title: Text(
+              'Bitcoin',
+              style: theme.textTheme.bodyMedium,
             ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
+            subtitle: Text(
+              '20000\$',
+              style: theme.textTheme.labelSmall,
+            ),
+          );
+        },
       ),
     );
   }
