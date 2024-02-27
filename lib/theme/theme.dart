@@ -6,6 +6,8 @@ final darkTheme = ThemeData(
 // colorScheme: ColorScheme.fromSeed(seedColor: Colors.red),
 // useMaterial3: true,
   appBarTheme: const AppBarTheme(
+    elevation: 0,
+    iconTheme: IconThemeData(color: Colors.white),
     backgroundColor: Color.fromARGB(48, 48, 48, 48),
     titleTextStyle: TextStyle(
       color: Colors.white,
