@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 
-import '../../../repositories/crypto_coins/crypto_coins_repository.dart';
-import '../../../repositories/crypto_coins/models/crypto_coin.dart';
+import '../../../repositories/crypto_coins/crypto_coins.dart';
 import '../widgets/crypto_coin_tile.dart';
 
 class CryptoMainScreen extends StatefulWidget {
@@ -30,28 +30,25 @@ class _CryptoMainScreenState extends State<CryptoMainScreen> {
         centerTitle: true,
         title: const Text('Crypto Currency App'),
       ),
-      body: _cryptoCoinsList == null ? const Center(child: CircularProgressIndicator()) :
-      ListView.separated(
-        physics: const BouncingScrollPhysics(),
-        padding: const EdgeInsets.only(top: 16),
-        itemCount: _cryptoCoinsList!.length,
-        separatorBuilder: (context, index) => const Divider(),
-        itemBuilder: (context, i) {
-          final coin = _cryptoCoinsList![i];
+      body: _cryptoCoinsList == null
+          ? const Center(child: CircularProgressIndicator())
+          : ListView.separated(
+              physics: const BouncingScrollPhysics(),
+              padding: const EdgeInsets.only(top: 16),
+              itemCount: _cryptoCoinsList!.length,
+              separatorBuilder: (context, index) => const Divider(),
+              itemBuilder: (context, i) {
+                final coin = _cryptoCoinsList![i];
 
-          return CryptoCoinTile(coin: coin);
-        },
-      ),
-
-
-
+                return CryptoCoinTile(coin: coin);
+              },
+            ),
     );
   }
 
   Future<void> _loadCryptoCoins() async {
-    _cryptoCoinsList = await CryptoCoinsRepository().getCoinsList();
-    setState(() {
-
-    });
+    _cryptoCoinsList =
+        await GetIt.instance<AbstractCoinsRepository>().getCoinsList();
+    setState(() {});
   }
 }
