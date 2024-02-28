@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 
 import '../../../repositories/crypto_coins/crypto_coins.dart';
+import '../bloc/crypto_main_bloc.dart';
 import '../widgets/crypto_coin_tile.dart';
 
 class CryptoMainScreen extends StatefulWidget {
@@ -14,41 +16,62 @@ class CryptoMainScreen extends StatefulWidget {
 }
 
 class _CryptoMainScreenState extends State<CryptoMainScreen> {
-  List<CryptoCoin>? _cryptoCoinsList;
+  final _cryptoMainBloc =
+      CryptoMainBloc(GetIt.instance<AbstractCoinsRepository>());
 
   @override
   void initState() {
-    _loadCryptoCoins();
+    _cryptoMainBloc.add(LoadCryptoMain());
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Scaffold(
       // backgroundColor: Colors.white,
       appBar: AppBar(
         centerTitle: true,
         title: const Text('Crypto Currency App'),
       ),
-      body: _cryptoCoinsList == null
-          ? const Center(child: CircularProgressIndicator())
-          : ListView.separated(
+      body: BlocBuilder<CryptoMainBloc, CryptoMainState>(
+        bloc: _cryptoMainBloc,
+        builder: (context, state) {
+          if (state is CryptoMainLoaded) {
+            return ListView.separated(
               physics: const BouncingScrollPhysics(),
               padding: const EdgeInsets.only(top: 16),
-              itemCount: _cryptoCoinsList!.length,
+              itemCount: state.coinsMain.length,
               separatorBuilder: (context, index) => const Divider(),
               itemBuilder: (context, i) {
-                final coin = _cryptoCoinsList![i];
-
+                final coin = state.coinsMain[i];
                 return CryptoCoinTile(coin: coin);
               },
-            ),
+            );
+          }
+          if (state is CryptoMainLoadingFailure) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    'Something went wrong',
+                    style: theme.textTheme.headlineMedium,
+                  ),
+                  Text(
+                    'Please try again later',
+                    style: theme.textTheme.labelSmall?.copyWith(fontSize: 16),
+                  ),
+                ],
+              ),
+            );
+          }
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        },
+      ),
     );
-  }
-
-  Future<void> _loadCryptoCoins() async {
-    _cryptoCoinsList =
-        await GetIt.instance<AbstractCoinsRepository>().getCoinsList();
-    setState(() {});
   }
 }

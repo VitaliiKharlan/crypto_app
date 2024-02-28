@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'router/router.dart' show routes;
-import 'theme/theme.dart' show darkTheme;
+import 'router/router.dart';
+import 'theme/theme.dart';
 
 class CryptoCurrencyApp extends StatelessWidget {
   const CryptoCurrencyApp({super.key});
