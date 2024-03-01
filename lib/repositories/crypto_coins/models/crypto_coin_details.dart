@@ -1,8 +1,10 @@
 import 'package:equatable/equatable.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'crypto_coin_details.g.dart';
 
+@HiveType(typeId: 1)
 @JsonSerializable()
 class CryptoCoinDetail extends Equatable {
   const CryptoCoinDetail({
@@ -14,9 +16,11 @@ class CryptoCoinDetail extends Equatable {
     required this.low24Hours,
   });
 
+  @HiveField(0)
   @JsonKey(name: 'TOSYMBOL')
   final String toSymbol;
 
+  @HiveField(1)
   @JsonKey(
     name: 'LASTUPDATE',
     toJson: _dateTimeToJson,
@@ -24,17 +28,23 @@ class CryptoCoinDetail extends Equatable {
   )
   final DateTime lastUpdate;
 
+  @HiveField(2)
   @JsonKey(name: 'HIGH24HOUR')
   final double high24Hour;
 
+  @HiveField(3)
   @JsonKey(name: 'LOW24HOUR')
   final double low24Hours;
 
+  @HiveField(4)
   @JsonKey(name: 'PRICE')
   final double priceInUSD;
 
+  @HiveField(5)
   @JsonKey(name: 'IMAGEURL')
   final String imageUrl;
+
+  String get fullImageUrl => 'https://www.cryptocompare.com/$imageUrl';
 
   factory CryptoCoinDetail.fromJson(Map<String, dynamic> json) =>
       _$CryptoCoinDetailFromJson(json);
@@ -45,8 +55,6 @@ class CryptoCoinDetail extends Equatable {
 
   static DateTime _dateTimeFromJson(int milliseconds) =>
       DateTime.fromMillisecondsSinceEpoch(milliseconds);
-
-  String get fullImageUrl => 'https://www.cryptocompare.com/$imageUrl';
 
   @override
   List<Object> get props => [
