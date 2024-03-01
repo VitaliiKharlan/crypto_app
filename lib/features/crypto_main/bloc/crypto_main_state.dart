@@ -1,12 +1,15 @@
 part of 'crypto_main_bloc.dart';
 
-class CryptoMainState {}
+abstract class CryptoMainState extends Equatable {}
 
-class CryptoMainInitial extends CryptoMainState {}
+class CryptoMainInitial extends CryptoMainState {
+  @override
+  List<Object?> get props => [];
+}
 
 class CryptoMainLoading extends CryptoMainState {
-  // @override
-  // List<Object?> get props => [];
+  @override
+  List<Object?> get props => [];
 }
 
 class CryptoMainLoaded extends CryptoMainState {
@@ -16,12 +19,8 @@ class CryptoMainLoaded extends CryptoMainState {
 
   final List<CryptoCoin> coinsMain;
 
-
-
-//   @override
-//   List<Object?> get props => [coinsList];
-// }
-
+  @override
+  List<Object?> get props => [coinsMain];
 }
 
 class CryptoMainLoadingFailure extends CryptoMainState {
@@ -31,13 +30,6 @@ class CryptoMainLoadingFailure extends CryptoMainState {
 
   final Object? exception;
 
-  // @override
-  // List<Object?> get props => [exception];
-
-
-//
-//   final Object? exception;
-//
-//   @override
-//   List<Object?> get props => [exception];
+  @override
+  List<Object?> get props => [exception];
 }

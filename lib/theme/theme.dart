@@ -22,7 +22,7 @@ final darkTheme = ThemeData(
       fontSize: 20,
     ),
     labelSmall: TextStyle(
-      color: Colors.white.withOpacity(0.4),
+      color: Colors.white.withOpacity(0.8),
       fontWeight: FontWeight.w700,
       fontSize: 14,
     ),

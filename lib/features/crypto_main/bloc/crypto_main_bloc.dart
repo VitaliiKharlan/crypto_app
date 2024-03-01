@@ -1,23 +1,29 @@
-import 'package:crypto_app/repositories/crypto_coins/models/crypto_coin.dart';
+import 'dart:async';
+
+import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../repositories/crypto_coins/abstract_coins_repository.dart';
+import '../../../repositories/crypto_coins/models/crypto_coin.dart';
 
 part 'crypto_main_event.dart';
-
 part 'crypto_main_state.dart';
 
 class CryptoMainBloc extends Bloc<CryptoMainEvent, CryptoMainState> {
   CryptoMainBloc(this.coinsRepository) : super(CryptoMainInitial()) {
     on<CryptoMainEvent>((event, emit) async {
       try {
-        final coinsMain =
-            await coinsRepository.getCoinsList();
+        if (state is! CryptoMainLoaded) {
+        emit(CryptoMainLoading());
+      }
+
+        final coinsMain = await coinsRepository.getCoinsList();
         emit(CryptoMainLoaded(coinsMain: coinsMain));
       } catch (e) {
         emit(CryptoMainLoadingFailure(exception: e));
+      } finally {
+        event.completer?.complete();
       }
-
     });
   }
 
