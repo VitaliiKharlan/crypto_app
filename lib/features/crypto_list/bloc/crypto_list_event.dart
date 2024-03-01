@@ -1,11 +1,11 @@
-part of 'crypto_main_bloc.dart';
+part of 'crypto_list_bloc.dart';
 
-abstract class CryptoMainEvent extends Equatable {
+abstract class CryptoListEvent extends Equatable {
   get completer => null;
 }
 
-class LoadCryptoMain extends CryptoMainEvent {
-  LoadCryptoMain({
+class LoadCryptoList extends CryptoListEvent {
+  LoadCryptoList({
     required this.completer,
   });
 

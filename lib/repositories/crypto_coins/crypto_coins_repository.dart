@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 
 import 'crypto_coins.dart';
+import 'models/crypto_coin_details.dart';
 
 class CryptoCoinsRepository implements AbstractCoinsRepository {
   CryptoCoinsRepository({
@@ -31,5 +32,35 @@ class CryptoCoinsRepository implements AbstractCoinsRepository {
     }).toList();
 
     return cryptoCoinsList;
+  }
+
+  @override
+  Future<CryptoCoinDetail> getCoinDetails(String currencyCode) async {
+    final response = await dio
+        .get<Response<dynamic>>('https://min-api.cryptocompare.com/data/pricemultifull?fsyms='
+            'BTC&tsyms=USD');
+
+    final data = response.data as Map<String, dynamic>;
+    final dataRaw = data['RAW'] as Map<String, dynamic>;
+    final coinData = dataRaw[currencyCode] as Map<String, dynamic>;
+
+    final usdData = coinData['USD'] as Map<String, dynamic>;
+
+    final price = usdData['PRICE'] as double;
+    final imageUrl = usdData['IMAGEURL'];
+    final toSymbol = usdData['TOSYMBOL'] as String;
+    final lastUpdate = usdData['LASTUPDATE'] as int;
+    final high24hour = usdData['HIGH24HOUR'] as double;
+    final low24hour = usdData['HIGH24HOUR'] as double;
+
+    return CryptoCoinDetail(
+      name: currencyCode,
+      priceInUSD: price,
+      imageUrl: 'https://www.cryptocompare.com/$imageUrl',
+      toSymbol: toSymbol,
+      lastUpdate: DateTime.fromMillisecondsSinceEpoch(lastUpdate),
+      high24Hour: high24hour,
+      low24Hours: low24hour,
+    );
   }
 }

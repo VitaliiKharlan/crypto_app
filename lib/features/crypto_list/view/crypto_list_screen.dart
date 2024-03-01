@@ -3,27 +3,28 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
+import 'package:talker_flutter/talker_flutter.dart';
 
 import '../../../repositories/crypto_coins/crypto_coins.dart';
-import '../bloc/crypto_main_bloc.dart';
+import '../bloc/crypto_list_bloc.dart';
 import '../widgets/crypto_coin_tile.dart';
 
-class CryptoMainScreen extends StatefulWidget {
-  const CryptoMainScreen({
+class CryptoListScreen extends StatefulWidget {
+  const CryptoListScreen({
     super.key,
   });
 
   @override
-  State<CryptoMainScreen> createState() => _CryptoMainScreenState();
+  State<CryptoListScreen> createState() => _CryptoListScreenState();
 }
 
-class _CryptoMainScreenState extends State<CryptoMainScreen> {
+class _CryptoListScreenState extends State<CryptoListScreen> {
   final _cryptoMainBloc =
-      CryptoMainBloc(GetIt.instance<AbstractCoinsRepository>());
+      CryptoListBloc(GetIt.instance<AbstractCoinsRepository>());
 
   @override
   void initState() {
-    _cryptoMainBloc.add(LoadCryptoMain(completer: null));
+    _cryptoMainBloc.add(LoadCryptoList(completer: null));
     super.initState();
   }
 
@@ -35,29 +36,43 @@ class _CryptoMainScreenState extends State<CryptoMainScreen> {
       appBar: AppBar(
         centerTitle: true,
         title: const Text('Crypto Currency App'),
+        actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute<dynamic>(
+                  builder: (context) => TalkerScreen(
+                    talker: GetIt.instance<Talker>(),
+                  ),
+                ),
+              );
+            },
+            icon: const Icon(Icons.document_scanner_outlined),
+          ),
+        ],
       ),
       body: RefreshIndicator(
         onRefresh: () async {
-          final completer = Completer();
-          _cryptoMainBloc.add(LoadCryptoMain(completer: completer));
+          final completer = Completer<dynamic>();
+          _cryptoMainBloc.add(LoadCryptoList(completer: completer));
           return completer.future;
         },
-        child: BlocBuilder<CryptoMainBloc, CryptoMainState>(
+        child: BlocBuilder<CryptoListBloc, CryptoListState>(
           bloc: _cryptoMainBloc,
           builder: (context, state) {
-            if (state is CryptoMainLoaded) {
+            if (state is CryptoListLoaded) {
               return ListView.separated(
                 physics: const BouncingScrollPhysics(),
                 padding: const EdgeInsets.only(top: 16),
-                itemCount: state.coinsMain.length,
+                itemCount: state.coinsList.length,
                 separatorBuilder: (context, index) => const Divider(),
                 itemBuilder: (context, i) {
-                  final coin = state.coinsMain[i];
+                  final coin = state.coinsList[i];
                   return CryptoCoinTile(coin: coin);
                 },
               );
             }
-            if (state is CryptoMainLoadingFailure) {
+            if (state is CryptoListLoadingFailure) {
               return Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -76,7 +91,7 @@ class _CryptoMainScreenState extends State<CryptoMainScreen> {
                     const SizedBox(height: 20),
                     TextButton(
                       onPressed: () {
-                        _cryptoMainBloc.add(LoadCryptoMain(completer: null));
+                        _cryptoMainBloc.add(LoadCryptoList(completer: null));
                       },
                       child: const Text('Try again'),
                     ),
