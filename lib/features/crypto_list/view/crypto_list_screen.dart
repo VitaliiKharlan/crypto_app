@@ -31,6 +31,7 @@ class _CryptoListScreenState extends State<CryptoListScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+
     return Scaffold(
       // backgroundColor: Colors.white,
       appBar: AppBar(
