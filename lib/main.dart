@@ -59,7 +59,7 @@ void main() async {
 
   runZonedGuarded(
     () {
-      BindingBase.debugZoneErrorsAreFatal = true;
+      // BindingBase.debugZoneErrorsAreFatal = true;
       runApp(const CryptoCurrencyApp());
     },
     (e, st) {

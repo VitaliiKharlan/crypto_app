@@ -26,6 +26,12 @@ flutter packages pub run build_runner watch
 flutter pub run build_runner build --delete-conflicting-outputs
 
 
+# how to run auto_route
+
+flutter packages pub run build_runner build
+flutter packages pub run build_runner watch
+
+
 
 # how to add a commit
 
