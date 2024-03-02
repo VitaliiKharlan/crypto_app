@@ -1,4 +1,5 @@
-// import 'package:auto_route/auto_route.dart';
+
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
@@ -6,31 +7,31 @@ import 'package:get_it/get_it.dart';
 import '../../../repositories/crypto_coins/crypto_coins.dart';
 import '../bloc/crypto_coin_details/crypto_coin_details_bloc.dart';
 
-// @RoutePage()
+@RoutePage()
 class CryptoCoinScreen extends StatefulWidget {
   const CryptoCoinScreen({
     super.key,
-    // required this.coin,
+   required this.coin,
   });
 
- // final CryptoCoin coin;
+ final CryptoCoin coin;
 
   @override
   State<CryptoCoinScreen> createState() => _CryptoCoinScreenState();
 }
 
 class _CryptoCoinScreenState extends State<CryptoCoinScreen> {
- CryptoCoin? coin;
+ // CryptoCoin? coin;
 
   final _coinDetailsBloc = CryptoCoinDetailsBloc(
     GetIt.instance<AbstractCoinsRepository>(),
   );
 
-  // @override
-  // void initState() {
-  //   _coinDetailsBloc.add(LoadCryptoCoinDetails(currencyCode: widget.coin.name));
-  //   super.initState();
-  // }
+  @override
+  void initState() {
+    _coinDetailsBloc.add(LoadCryptoCoinDetails(currencyCode: widget.coin.name));
+    super.initState();
+  }
 
   // @override
   // void didChangeDependencies() {
@@ -52,23 +53,14 @@ class _CryptoCoinScreenState extends State<CryptoCoinScreen> {
   //   super.didChangeDependencies();
   // }
 
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         centerTitle: true,
-//         title: Text((coin).toString() ?? '...'),
-//       ),
-//     );
-//   }
-// }
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: const Text('Bitcoin'),
+        title: const Text('LOOK IT UP'),
       ),
       body: BlocBuilder<CryptoCoinDetailsBloc, CryptoCoinDetailsState>(
         bloc: _coinDetailsBloc,
@@ -80,6 +72,7 @@ class _CryptoCoinScreenState extends State<CryptoCoinScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
+                  const SizedBox(height: 80),
                   SizedBox(
                     height: 160,
                     width: 160,
@@ -93,11 +86,12 @@ class _CryptoCoinScreenState extends State<CryptoCoinScreen> {
                       fontWeight: FontWeight.w700,
                     ),
                   ),
-                  const SizedBox(height: 8),
-                  Card(
+                  const SizedBox(height: 12),
+                 Card(
+                   color: Colors.blue,
                     child: Center(
                       child: Text(
-                        '${coinDetails.priceInUSD} \$',
+                        '${coinDetails.priceInUSD.toStringAsFixed(4)} \$',
                         style: const TextStyle(
                           fontSize: 26,
                           fontWeight: FontWeight.w700,
@@ -105,17 +99,19 @@ class _CryptoCoinScreenState extends State<CryptoCoinScreen> {
                       ),
                     ),
                   ),
+                  const SizedBox(height: 12),
                   Card(
+                    color: Colors.blue,
                     child: Column(
                       children: [
                         _DataRow(
                           title: 'High 24 Hour',
-                          value: '${coinDetails.high24Hour} \$',
+                          value: '${coinDetails.high24Hour.toStringAsFixed(4)} \$',
                         ),
                         const SizedBox(height: 6),
                         _DataRow(
                           title: 'Low 24 Hour',
-                          value: '${coinDetails.low24Hours} \$',
+                          value: '${coinDetails.low24Hours.toStringAsFixed(4)} \$',
                         ),
                       ],
                     ),
@@ -142,16 +138,19 @@ class _DataRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        SizedBox(width: 140, child: Text(title)),
-        const SizedBox(width: 32),
-        Flexible(
-          child: Text(value),
-        ),
-      ],
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 12),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(width: 150, child: Text(title)),
+          const SizedBox(width: 32),
+          Flexible(
+            child: Text(value),
+          ),
+        ],
+      ),
     );
   }
 }
